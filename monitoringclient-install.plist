@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>autoremove</key>
+	<false/>
+	<key>catalogs</key>
+	<array>
+		<string>testing</string>
+		<string>production</string>
+	</array>
+	<key>description</key>
+	<string>Installs the Monitoring Client that informs us of impending failures and the health of your Mac.</string>
+	<key>display_name</key>
+	<string>Monitoring Client</string>
+	<key>minimum_os_version</key>
+	<string>10.6.0</string>
+    <key>installer_type</key>
+    <string>nopkg</string>
+	<key>name</key>
+	<string>MonitoringClient</string>
+	<key>postinstall_script</key>
+	<string>#!/bin/bash
+/usr/bin/curl -L1 https://YOURSUBDOMAIN.monitoringclient.com/downloads/MonitoringClient.pkg -o /tmp/MonitoringClient.pkg
+/usr/sbin/installer -target / -pkg /tmp/MonitoringClient.pkg
+/bin/rm /tmp/MonitoringClient.pkg
+exit 0
+	</string>
+	<key>installcheck_script</key>
+   	<string><![CDATA[#!/bin/bash
+wmsubdomain="$(defaults read /Library/MonitoringClient/ClientSettings Subdomain)"
+if [ -e /Library/MonitoringClient/RunClient ] && [[ $wmsubdomain == 'YOURSUBDOMAIN' ]]; then
+    exit 1
+else
+    exit 0
+fi
+#EXIT 0 TO INSTALL, EXIT 1 TO SKIP IT
+	]]></string>
+	<key>unattended_install</key>
+	<true/>
+	<key>unattended_uninstall</key>
+	<true/>
+	<key>version</key>
+	<string>1.0</string>
+	<key>uninstall_method</key>
+	<string>uninstall_script</string>
+	<key>uninstall_script</key>
+	<string>#!/bin/bash
+/Library/MonitoringClient/RemoveClient -F
+exit 0
+	</string>
+	<key>uninstallable</key>
+	<true/>
+</dict>
+</plist>
