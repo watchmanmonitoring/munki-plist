@@ -14,20 +14,23 @@
 	<key>display_name</key>
 	<string>Monitoring Client</string>
 	<key>minimum_os_version</key>
-	<string>10.6.0</string>
-    <key>installer_type</key>
-    <string>nopkg</string>
+	<string>10.7.0</string>
+	<key>installer_type</key>
+	<string>nopkg</string>
 	<key>name</key>
 	<string>MonitoringClient</string>
 	<key>postinstall_script</key>
-	<string>#!/bin/bash
+	<string><![CDATA[#!/bin/bash
+GROUP_NAME="ENTER_GROUP_NAME"
+	
+/usr/bin/defaults write /Library/MonitoringClient/ClientSettings ClientGroup -string "$GROUP_NAME"
 /usr/bin/curl -L1 https://YOURSUBDOMAIN.monitoringclient.com/downloads/MonitoringClient.pkg -o /tmp/MonitoringClient.pkg
 /usr/sbin/installer -target / -pkg /tmp/MonitoringClient.pkg
 /bin/rm /tmp/MonitoringClient.pkg
 exit 0
-	</string>
+	]]></string>
 	<key>installcheck_script</key>
-   	<string><![CDATA[#!/bin/bash
+	<string><![CDATA[#!/bin/bash
 wmsubdomain="$(defaults read /Library/MonitoringClient/ClientSettings Subdomain)"
 if [ -e /Library/MonitoringClient/RunClient ] && [[ $wmsubdomain == 'YOURSUBDOMAIN' ]]; then
     exit 1
