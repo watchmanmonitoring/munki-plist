@@ -30,9 +30,15 @@ GROUP_NAME="ENTER_GROUP_NAME"
 exit 0
 	]]></string>
 	<key>installcheck_script</key>
-	<string><![CDATA[#!/bin/bash
+	<string><![CDATA[#!/bin/zsh
+autoload is-at-least
 wmsubdomain="$(defaults read /Library/MonitoringClient/ClientSettings Subdomain)"
-if [ -e /Library/MonitoringClient/RunClient ] && [[ $wmsubdomain == 'YOURSUBDOMAIN' ]]; then
+wmversion="$(defaults read /Library/MonitoringClient/ClientSettings Client_Version)"
+wmversionmimimum="7.0"
+if [ -e /Library/MonitoringClient/RunClient ] && 
+   [[ $wmsubdomain == "YOURSUBDOMAIN" ]] && 
+   is-at-least $wmversionmimimum $wmversion 
+then
     exit 1
 else
     exit 0
