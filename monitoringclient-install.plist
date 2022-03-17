@@ -14,7 +14,7 @@
 	<key>display_name</key>
 	<string>Monitoring Client</string>
 	<key>minimum_os_version</key>
-	<string>10.7.0</string>
+	<string>10.11.0</string>
 	<key>installer_type</key>
 	<string>nopkg</string>
 	<key>name</key>
