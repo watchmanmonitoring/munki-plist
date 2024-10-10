@@ -14,7 +14,7 @@
 	<key>display_name</key>
 	<string>Monitoring Client</string>
 	<key>minimum_os_version</key>
-	<string>10.7.0</string>
+	<string>10.11.0</string>
 	<key>installer_type</key>
 	<string>nopkg</string>
 	<key>name</key>
@@ -22,17 +22,27 @@
 	<key>postinstall_script</key>
 	<string><![CDATA[#!/bin/bash
 GROUP_NAME="ENTER_GROUP_NAME"
+SUBDOMAIN="ENTER_YOUR_SUBDOMAIN"
 	
 /usr/bin/defaults write /Library/MonitoringClient/ClientSettings ClientGroup -string "$GROUP_NAME"
-/usr/bin/curl -L1 https://YOURSUBDOMAIN.monitoringclient.com/downloads/MonitoringClient.pkg -o /tmp/MonitoringClient.pkg
+/usr/bin/curl -L1 https://$SUBDOMAIN.monitoringclient.com/downloads/MonitoringClient.pkg -o /tmp/MonitoringClient.pkg
 /usr/sbin/installer -target / -pkg /tmp/MonitoringClient.pkg
 /bin/rm /tmp/MonitoringClient.pkg
 exit 0
 	]]></string>
 	<key>installcheck_script</key>
-	<string><![CDATA[#!/bin/bash
+	<string><![CDATA[#!/bin/zsh
+autoload is-at-least
+
+SUBDOMAIN="ENTER_YOUR_SUBDOMAIN"
+
 wmsubdomain="$(defaults read /Library/MonitoringClient/ClientSettings Subdomain)"
-if [ -e /Library/MonitoringClient/RunClient ] && [[ $wmsubdomain == 'YOURSUBDOMAIN' ]]; then
+wmversion="$(defaults read /Library/MonitoringClient/ClientSettings Client_Version)"
+wmversionmimimum="7.0"
+if [ -e /Library/MonitoringClient/RunClient ] && 
+   [[ $wmsubdomain == "$SUBDOMAIN" ]] && 
+   is-at-least $wmversionmimimum $wmversion 
+then
     exit 1
 else
     exit 0
